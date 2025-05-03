@@ -10,27 +10,32 @@ const io = new Server(server);
 // Serve static frontend files
 app.use(express.static(path.join(__dirname, './public')));
 
-// Optional: serve /call.html explicitly (or let static serve it)
+// Serve /call.html explicitly (or let static handle it too)
 app.get('/call.html', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/call.html'));
+  res.sendFile(path.join(__dirname, './public/call.html'));
+});
+
+// ✅ Fallback route for /
+app.get('/', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 });
 
 // WebSocket signaling
 io.on('connection', (socket) => {
-    console.log('User connected:', socket.id);
+  console.log('User connected:', socket.id);
 
-    socket.on('join', (room) => {
-        socket.join(room);
-        socket.to(room).emit('peer-joined', socket.id);
-    });
+  socket.on('join', (room) => {
+    socket.join(room);
+    socket.to(room).emit('peer-joined', socket.id);
+  });
 
-    socket.on('signal', (data) => {
-        io.to(data.to).emit('signal', { from: data.from, signal: data.signal });
-    });
+  socket.on('signal', (data) => {
+    io.to(data.to).emit('signal', { from: data.from, signal: data.signal });
+  });
 
-    socket.on('disconnect', () => {
-        console.log('User disconnected:', socket.id);
-    });
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+  });
 });
 
 // Listen on provided PORT
