@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ghostalk - Voice Call</title>
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PZ0SVGNBR0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PZ0SVGNBR0');
+</script>
+
+<body>
+    <h1>In Call</h1>
+    <button onclick="window.location.href='/'">End Call</button>
+
+    <!-- Load socket.io client -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- Load your call setup logic -->
+    <script type="module">
+        import { setupConnection } from '/js/webrtc.js';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const room = urlParams.get('room');
+        setupConnection(room);
+    </script>
+</body>
+</html>
