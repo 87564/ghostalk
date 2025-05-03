@@ -7,16 +7,15 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
+// Serve static frontend files
 app.use(express.static(path.join(__dirname, './public')));
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/index.html'));
-});
-
+// Optional: serve /call.html explicitly (or let static serve it)
 app.get('/call.html', (req, res) => {
     res.sendFile(path.join(__dirname, './public/call.html'));
 });
 
+// WebSocket signaling
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
@@ -34,6 +33,7 @@ io.on('connection', (socket) => {
     });
 });
 
+// Listen on provided PORT
 const PORT = process.env.PORT || 3000;
 console.log('Environment PORT:', process.env.PORT);
 console.log('Using PORT:', PORT);
